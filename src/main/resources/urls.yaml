@@ -1,0 +1,4 @@
+marvel:
+  getHeroById:
+    server: https://gateway.marvel.com
+    port: 443
