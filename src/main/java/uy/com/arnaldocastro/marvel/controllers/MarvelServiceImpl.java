@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Service
-@PropertySource(value={"/keys.yaml", "/urls.yaml"})
+@PropertySource(value={"/marvelConfiguration.properties"})
 public class MarvelServiceImpl implements IMarvelService{
     private ApiCommunicationProvider<String, PathObject> apiCommunicationProvider;
     @Value("${server}")
