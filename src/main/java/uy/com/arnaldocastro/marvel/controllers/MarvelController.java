@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uy.com.arnaldocastro.marvel.logic.Hero;
 import uy.com.arnaldocastro.marvel.logic.exceptions.InternalServerError;
+import uy.com.arnaldocastro.marvel.logic.exceptions.InvalidIDException;
+import uy.com.arnaldocastro.marvel.logic.exceptions.NotFoundException;
+import uy.com.arnaldocastro.marvel.logic.exceptions.UnauthorizedException;
 
 import java.io.IOException;
 
@@ -30,6 +33,12 @@ public class MarvelController {
             return new ResponseEntity<>(hero, HttpStatus.OK);
         } catch (IOException | InternalServerError e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InvalidIDException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 }
