@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import uy.com.arnaldocastro.marvel.controllers.responses.HeroResponse;
 import uy.com.arnaldocastro.marvel.logic.Hero;
 import uy.com.arnaldocastro.marvel.logic.exceptions.InternalServerError;
+import uy.com.arnaldocastro.marvel.logic.exceptions.InvalidIDException;
+import uy.com.arnaldocastro.marvel.logic.exceptions.NotFoundException;
+import uy.com.arnaldocastro.marvel.logic.exceptions.UnauthorizedException;
 import uy.com.arnaldocastro.marvel.logic.helpers.HeroHelper;
 import uy.com.arnaldocastro.marvel.logic.providers.ApiCommunicationProvider;
 import uy.com.arnaldocastro.marvel.logic.providers.PathObject;
@@ -36,7 +39,8 @@ public class MarvelServiceImpl implements IMarvelService{
     }
 
     @Override
-    public Hero getHeroByID(String id) throws IOException, InternalServerError {
+    public Hero getHeroByID(String id) throws IOException, InternalServerError, InvalidIDException, NotFoundException, UnauthorizedException {
+        validateHeroID(id);
         Properties properties = new Properties();
         properties.load(new FileReader("src/main/resources/urls.properties"));
         String hash = Security.obtainMD5Key(String.format("%s%s%s", 1, privateKey, publicKey));
@@ -48,6 +52,14 @@ public class MarvelServiceImpl implements IMarvelService{
                 .build();
         String response = apiCommunicationProvider.communicate(pathObject);
         return buildHeroWithResponse(response);
+    }
+
+    private void validateHeroID(String id) throws InvalidIDException {
+        try{
+            Integer.parseInt(id);
+        } catch (Exception e){
+            throw new InvalidIDException();
+        }
     }
 
     @Override
